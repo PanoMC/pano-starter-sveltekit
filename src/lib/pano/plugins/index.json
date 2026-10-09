@@ -1,0 +1,104 @@
+{
+  "announcement": {
+    "pluginId": "pano-plugin-announcement",
+    "version": "0.0.0",
+    "operationsHash": "be928d3930c0fae5",
+    "controllersHash": null
+  },
+  "auth-guard": {
+    "pluginId": "pano-plugin-auth-guard",
+    "version": "0.0.0",
+    "operationsHash": "d8900f05461f0b84",
+    "controllersHash": null
+  },
+  "avatar": {
+    "pluginId": "pano-plugin-avatar",
+    "version": "0.0.0",
+    "operationsHash": "7de206a5593a8926",
+    "controllersHash": null
+  },
+  "bans": {
+    "pluginId": "pano-plugin-bans",
+    "version": "0.0.0",
+    "operationsHash": "95bf646bb7809def",
+    "controllersHash": null
+  },
+  "comments": {
+    "pluginId": "pano-plugin-comments",
+    "version": "0.0.0",
+    "operationsHash": "accd7547f74b4d9d",
+    "controllersHash": null
+  },
+  "cookies": {
+    "pluginId": "pano-plugin-cookies",
+    "version": "0.0.0",
+    "operationsHash": "e6ef212ce2b2218b",
+    "controllersHash": null
+  },
+  "countdown-timer": {
+    "pluginId": "pano-plugin-countdown-timer",
+    "version": "0.0.0",
+    "operationsHash": "8dfee841a8294b5b",
+    "controllersHash": null
+  },
+  "faq": {
+    "pluginId": "pano-plugin-faq",
+    "version": "0.0.0",
+    "operationsHash": "580d5a9c2f9ac709",
+    "controllersHash": null
+  },
+  "market": {
+    "pluginId": "pano-plugin-market",
+    "version": "1.0.0",
+    "operationsHash": "cd169e7843d6c185",
+    "controllersHash": "27b9f2b6c7821df3"
+  },
+  "media-page": {
+    "pluginId": "pano-plugin-media-page",
+    "version": "0.0.0",
+    "operationsHash": "4df9b14b5a5450b9",
+    "controllersHash": null
+  },
+  "pages": {
+    "pluginId": "pano-plugin-pages",
+    "version": "0.0.0",
+    "operationsHash": "8be721333c78b42b",
+    "controllersHash": null
+  },
+  "premium-login": {
+    "pluginId": "pano-plugin-premium-login",
+    "version": "0.0.0",
+    "operationsHash": "a28417671b152272",
+    "controllersHash": null
+  },
+  "redirects": {
+    "pluginId": "pano-plugin-link-redirects",
+    "version": "0.0.0",
+    "operationsHash": "23c566066db9829f",
+    "controllersHash": null
+  },
+  "slider": {
+    "pluginId": "pano-plugin-slider",
+    "version": "0.0.0",
+    "operationsHash": "8d83e4b33a52a4b8",
+    "controllersHash": null
+  },
+  "social-login": {
+    "pluginId": "pano-plugin-social-login",
+    "version": "0.0.0",
+    "operationsHash": "8c3d15c85bc685c0",
+    "controllersHash": null
+  },
+  "staff-page": {
+    "pluginId": "pano-plugin-staff-page",
+    "version": "0.0.0",
+    "operationsHash": "e6ba7a09c4d83bdf",
+    "controllersHash": null
+  },
+  "whitelist": {
+    "pluginId": "pano-plugin-whitelist",
+    "version": "0.0.0",
+    "operationsHash": "3fe9229c02575ca4",
+    "controllersHash": null
+  }
+}

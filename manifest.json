@@ -1,0 +1,17 @@
+{
+  "id": "pano-starter",
+  "type": "custom-app",
+  "title": "Pano starter",
+  "version": "0.1.0",
+  "author": "Pano",
+  "description": "A headless SvelteKit site for Pano: posts, sign-in and the market store, all through this server.",
+  "apiLevel": 1,
+  "urls": {
+    "auth.login": "/login",
+    "auth.register": "/register",
+    "market.store": "/store",
+    "market.product": "/store/{slug}",
+    "market.checkout": "/store/checkout",
+    "market.order": "/store/order/{id}"
+  }
+}

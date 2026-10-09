@@ -1,0 +1,536 @@
+{
+  "components": {
+    "headers": {
+      "PanoApiLevel": {
+        "description": "The API level this Pano implements.",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "responses": {
+      "Error400": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Bad request: BAD_REQUEST",
+        "x-pano-error-codes": [
+          "BAD_REQUEST"
+        ]
+      },
+      "Error401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Not logged in: NOT_LOGGED_IN",
+        "x-pano-error-codes": [
+          "NOT_LOGGED_IN"
+        ]
+      },
+      "Error403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Forbidden: INVALID_CSRF_TOKEN, NO_PERMISSION",
+        "x-pano-error-codes": [
+          "INVALID_CSRF_TOKEN",
+          "NO_PERMISSION"
+        ]
+      },
+      "Error429": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Too many requests: RATE_LIMIT_EXCEEDED",
+        "x-pano-error-codes": [
+          "RATE_LIMIT_EXCEEDED"
+        ]
+      },
+      "Error500": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Internal server error: INTERNAL_SERVER_ERROR",
+        "x-pano-error-codes": [
+          "INTERNAL_SERVER_ERROR"
+        ]
+      },
+      "Error503": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Service unavailable: MAINTENANCE_MODE_ENABLED",
+        "x-pano-error-codes": [
+          "MAINTENANCE_MODE_ENABLED"
+        ]
+      }
+    },
+    "schemas": {
+      "Error": {
+        "description": "The body of every non-2xx answer.",
+        "properties": {
+          "error": {
+            "properties": {
+              "code": {
+                "description": "A stable, declared code.",
+                "pattern": "^[A-Z][A-Z0-9_]*$",
+                "type": "string"
+              },
+              "details": {
+                "additionalProperties": true,
+                "description": "Extra facts about the failure.",
+                "type": "object"
+              },
+              "fields": {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Field name to code, for a rejected form.",
+                "type": "object"
+              },
+              "message": {
+                "description": "Optional English text.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "code"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "type": "object"
+      },
+      "Page": {
+        "description": "Where a list stands: page numbers start at 1, `pageSize` is at most 100.",
+        "properties": {
+          "number": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "size": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "totalItems": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "totalPages": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "number",
+          "size",
+          "totalItems",
+          "totalPages"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "The public API of the plugin pano-plugin-media-page, served below /api/plugins/pano-plugin-media-page.",
+    "summary": "Pano plugin API: pano-plugin-media-page",
+    "title": "Pano plugin API: pano-plugin-media-page",
+    "version": "1",
+    "x-pano-api-level": 1,
+    "x-pano-plugin-id": "pano-plugin-media-page",
+    "x-pano-scope": "plugin"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/media-pages": {
+      "get": {
+        "operationId": "GetMediaPages",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "items": {
+                      "items": {
+                        "properties": {
+                          "active": {
+                            "type": "boolean"
+                          },
+                          "createdAt": {
+                            "type": "integer"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "integer"
+                          },
+                          "registerToThemeNav": {
+                            "type": "boolean"
+                          },
+                          "slug": {
+                            "type": "string"
+                          },
+                          "sortOrder": {
+                            "type": "integer"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "updatedAt": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "active",
+                          "id",
+                          "slug",
+                          "title"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "summary": "The active media pages.",
+        "tags": [
+          "media-pages"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/media-pages/{slug}": {
+      "get": {
+        "operationId": "GetMediaPageBySlug",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "categories": {
+                      "items": {
+                        "properties": {
+                          "category": {
+                            "properties": {
+                              "createdAt": {
+                                "type": "integer"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "id": {
+                                "type": "integer"
+                              },
+                              "pageId": {
+                                "type": "integer"
+                              },
+                              "sortOrder": {
+                                "type": "integer"
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "visible": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "pageId",
+                              "title"
+                            ],
+                            "type": "object"
+                          },
+                          "items": {
+                            "items": {
+                              "properties": {
+                                "categoryId": {
+                                  "type": "integer"
+                                },
+                                "createdAt": {
+                                  "type": "integer"
+                                },
+                                "description": {
+                                  "type": "string"
+                                },
+                                "duration": {
+                                  "type": "integer"
+                                },
+                                "filePath": {
+                                  "type": "string"
+                                },
+                                "fileSize": {
+                                  "type": "integer"
+                                },
+                                "height": {
+                                  "type": "integer"
+                                },
+                                "id": {
+                                  "type": "integer"
+                                },
+                                "mimeType": {
+                                  "type": "string"
+                                },
+                                "originalFileName": {
+                                  "type": "string"
+                                },
+                                "sortOrder": {
+                                  "type": "integer"
+                                },
+                                "thumbnailPath": {
+                                  "type": "string"
+                                },
+                                "title": {
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "type": "string"
+                                },
+                                "width": {
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "categoryId",
+                                "filePath",
+                                "id",
+                                "type"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "category",
+                          "items"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "mediaPage": {
+                      "properties": {
+                        "active": {
+                          "type": "boolean"
+                        },
+                        "createdAt": {
+                          "type": "integer"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "integer"
+                        },
+                        "registerToThemeNav": {
+                          "type": "boolean"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "sortOrder": {
+                          "type": "integer"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "active",
+                        "id",
+                        "slug",
+                        "title"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "categories",
+                    "mediaPage"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not found: NOT_FOUND",
+            "x-pano-error-codes": [
+              "NOT_FOUND"
+            ]
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "summary": "One media page with its visible categories and their items.",
+        "tags": [
+          "media-pages"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/media/file/{fileName}": {
+      "get": {
+        "operationId": "GetMediaFile",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileName",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not found: NOT_FOUND",
+            "x-pano-error-codes": [
+              "NOT_FOUND"
+            ]
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "summary": "An uploaded media file or its thumbnail.",
+        "tags": [
+          "media-pages"
+        ],
+        "x-pano-stability": "public"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/plugins/pano-plugin-media-page"
+    }
+  ],
+  "tags": [
+    {
+      "name": "media-pages"
+    }
+  ]
+}

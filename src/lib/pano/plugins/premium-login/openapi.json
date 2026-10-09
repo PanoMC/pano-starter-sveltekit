@@ -1,0 +1,878 @@
+{
+  "components": {
+    "headers": {
+      "PanoApiLevel": {
+        "description": "The API level this Pano implements.",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "responses": {
+      "Error400": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Bad request: BAD_REQUEST",
+        "x-pano-error-codes": [
+          "BAD_REQUEST"
+        ]
+      },
+      "Error401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Not logged in: NOT_LOGGED_IN",
+        "x-pano-error-codes": [
+          "NOT_LOGGED_IN"
+        ]
+      },
+      "Error403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Forbidden: INVALID_CSRF_TOKEN, NO_PERMISSION",
+        "x-pano-error-codes": [
+          "INVALID_CSRF_TOKEN",
+          "NO_PERMISSION"
+        ]
+      },
+      "Error429": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Too many requests: RATE_LIMIT_EXCEEDED",
+        "x-pano-error-codes": [
+          "RATE_LIMIT_EXCEEDED"
+        ]
+      },
+      "Error500": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Internal server error: INTERNAL_SERVER_ERROR",
+        "x-pano-error-codes": [
+          "INTERNAL_SERVER_ERROR"
+        ]
+      },
+      "Error503": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Service unavailable: MAINTENANCE_MODE_ENABLED",
+        "x-pano-error-codes": [
+          "MAINTENANCE_MODE_ENABLED"
+        ]
+      }
+    },
+    "schemas": {
+      "Error": {
+        "description": "The body of every non-2xx answer.",
+        "properties": {
+          "error": {
+            "properties": {
+              "code": {
+                "description": "A stable, declared code.",
+                "pattern": "^[A-Z][A-Z0-9_]*$",
+                "type": "string"
+              },
+              "details": {
+                "additionalProperties": true,
+                "description": "Extra facts about the failure.",
+                "type": "object"
+              },
+              "fields": {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Field name to code, for a rejected form.",
+                "type": "object"
+              },
+              "message": {
+                "description": "Optional English text.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "code"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "type": "object"
+      },
+      "Page": {
+        "description": "Where a list stands: page numbers start at 1, `pageSize` is at most 100.",
+        "properties": {
+          "number": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "size": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "totalItems": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "totalPages": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "number",
+          "size",
+          "totalItems",
+          "totalPages"
+        ],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "description": "A site session token, sent by a server-side front-end that holds a front-end key. Not valid on the panel API.",
+        "scheme": "bearer",
+        "type": "http"
+      },
+      "sessionCookie": {
+        "description": "The session cookie set by login. A mutation also repeats the `pano_csrf_token` cookie in the `X-CSRF-Token` header. Behind a plain-http origin the cookie names end in `_http`.",
+        "in": "cookie",
+        "name": "pano_auth_token",
+        "type": "apiKey"
+      }
+    }
+  },
+  "info": {
+    "description": "The public API of the plugin pano-plugin-premium-login, served below /api/plugins/pano-plugin-premium-login.",
+    "summary": "Pano plugin API: pano-plugin-premium-login",
+    "title": "Pano plugin API: pano-plugin-premium-login",
+    "version": "1",
+    "x-pano-api-level": 1,
+    "x-pano-plugin-id": "pano-plugin-premium-login",
+    "x-pano-scope": "plugin"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/config": {
+      "get": {
+        "operationId": "GetPremiumLoginConfigPublic",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "microsoftLoginEnabled": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "microsoftLoginEnabled"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "summary": "Reads whether Microsoft sign-in is on.",
+        "tags": [
+          "config"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/me": {
+      "put": {
+        "operationId": "UpdateOwnPremiumStatus",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "accountType": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "accountType"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Sets the account type (AUTO, PREMIUM or CRACKED) of the signed-in user.",
+        "tags": [
+          "player"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/microsoft/callback": {
+      "get": {
+        "operationId": "MicrosoftCallback",
+        "responses": {
+          "200": {
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "summary": "The address registered at Microsoft: receives the authorization code and redirects the browser to the callback page of the front-end.",
+        "tags": [
+          "microsoft"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/microsoft/link": {
+      "get": {
+        "operationId": "MicrosoftLinkInit",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "redirectUrl": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "redirectUrl"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden: NO_PERMISSION",
+            "x-pano-error-codes": [
+              "NO_PERMISSION"
+            ]
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict: MICROSOFT_LOGIN_NOT_ENABLED",
+            "x-pano-error-codes": [
+              "MICROSOFT_LOGIN_NOT_ENABLED"
+            ]
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Returns the Microsoft address to send the browser to for linking a premium account to the signed-in user.",
+        "tags": [
+          "microsoft"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/microsoft/login": {
+      "get": {
+        "operationId": "MicrosoftLoginInit",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "redirectUrl": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "redirectUrl"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict: MICROSOFT_LOGIN_NOT_ENABLED",
+            "x-pano-error-codes": [
+              "MICROSOFT_LOGIN_NOT_ENABLED"
+            ]
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "summary": "Returns the Microsoft address to send the browser to for signing in.",
+        "tags": [
+          "microsoft"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/microsoft/process": {
+      "post": {
+        "operationId": "MicrosoftProcess",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "code",
+                  "state"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "csrfToken": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "integer"
+                    },
+                    "mcUsername": {
+                      "type": "string"
+                    },
+                    "sessionToken": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "action"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Bad request: BAD_REQUEST, MICROSOFT_LOGIN_FAILED",
+            "x-pano-error-codes": [
+              "BAD_REQUEST",
+              "MICROSOFT_LOGIN_FAILED"
+            ]
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict: MICROSOFT_LOGIN_NOT_ENABLED, MINECRAFT_ACCOUNT_ALREADY_LINKED",
+            "x-pano-error-codes": [
+              "MICROSOFT_LOGIN_NOT_ENABLED",
+              "MINECRAFT_ACCOUNT_ALREADY_LINKED"
+            ]
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "summary": "Finishes a Microsoft sign-in: exchanges the code from the callback for a Minecraft profile and signs in, registers or links the account.",
+        "tags": [
+          "microsoft"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/microsoft/register": {
+      "get": {
+        "operationId": "MicrosoftRegisterInit",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "redirectUrl": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "redirectUrl"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Conflict: MICROSOFT_LOGIN_NOT_ENABLED",
+            "x-pano-error-codes": [
+              "MICROSOFT_LOGIN_NOT_ENABLED"
+            ]
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "summary": "Returns the Microsoft address to send the browser to for signing up.",
+        "tags": [
+          "microsoft"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/microsoft/unlink": {
+      "post": {
+        "operationId": "MicrosoftUnlink",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Unlinks the premium account of the signed-in user.",
+        "tags": [
+          "microsoft"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/player/{username}": {
+      "get": {
+        "operationId": "GetPlayerPremiumStatus",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "username",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "accountType": {
+                      "type": "string"
+                    },
+                    "lastUpdated": {
+                      "type": "integer"
+                    },
+                    "playerName": {
+                      "type": "string"
+                    },
+                    "playerUuid": {
+                      "type": "string"
+                    },
+                    "premiumLinked": {
+                      "type": "boolean"
+                    },
+                    "source": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "accountType",
+                    "lastUpdated",
+                    "playerName",
+                    "playerUuid",
+                    "premiumLinked",
+                    "source"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "summary": "Reads the premium account status of a player by user name; an unknown player is reported as AUTO and not linked.",
+        "tags": [
+          "player"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/set-username": {
+      "post": {
+        "operationId": "SetUsername",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "newUsername": {
+                    "type": "string"
+                  },
+                  "token": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "newUsername",
+                  "token"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not logged in: INVALID_TOKEN",
+            "x-pano-error-codes": [
+              "INVALID_TOKEN"
+            ]
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error 422: REGISTER_INVALID_USERNAME, REGISTER_USERNAME_NOT_AVAILABLE, REGISTER_USERNAME_TOO_LONG, REGISTER_USERNAME_TOO_SHORT",
+            "x-pano-error-codes": [
+              "REGISTER_INVALID_USERNAME",
+              "REGISTER_USERNAME_NOT_AVAILABLE",
+              "REGISTER_USERNAME_TOO_LONG",
+              "REGISTER_USERNAME_TOO_SHORT"
+            ]
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "summary": "Sets a new user name with the token from the username change mail and uses the token up.",
+        "tags": [
+          "set-username"
+        ],
+        "x-pano-stability": "public"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/plugins/pano-plugin-premium-login"
+    }
+  ],
+  "tags": [
+    {
+      "name": "config"
+    },
+    {
+      "name": "microsoft"
+    },
+    {
+      "name": "player"
+    },
+    {
+      "name": "set-username"
+    }
+  ]
+}

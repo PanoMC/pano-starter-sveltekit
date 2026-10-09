@@ -1,0 +1,788 @@
+{
+  "components": {
+    "headers": {
+      "PanoApiLevel": {
+        "description": "The API level this Pano implements.",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
+    "responses": {
+      "Error400": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Bad request: BAD_REQUEST",
+        "x-pano-error-codes": [
+          "BAD_REQUEST"
+        ]
+      },
+      "Error401": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Not logged in: NOT_LOGGED_IN",
+        "x-pano-error-codes": [
+          "NOT_LOGGED_IN"
+        ]
+      },
+      "Error403": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Forbidden: INVALID_CSRF_TOKEN, NO_PERMISSION",
+        "x-pano-error-codes": [
+          "INVALID_CSRF_TOKEN",
+          "NO_PERMISSION"
+        ]
+      },
+      "Error429": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Too many requests: RATE_LIMIT_EXCEEDED",
+        "x-pano-error-codes": [
+          "RATE_LIMIT_EXCEEDED"
+        ]
+      },
+      "Error500": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Internal server error: INTERNAL_SERVER_ERROR",
+        "x-pano-error-codes": [
+          "INTERNAL_SERVER_ERROR"
+        ]
+      },
+      "Error503": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "description": "Service unavailable: MAINTENANCE_MODE_ENABLED",
+        "x-pano-error-codes": [
+          "MAINTENANCE_MODE_ENABLED"
+        ]
+      }
+    },
+    "schemas": {
+      "Error": {
+        "description": "The body of every non-2xx answer.",
+        "properties": {
+          "error": {
+            "properties": {
+              "code": {
+                "description": "A stable, declared code.",
+                "pattern": "^[A-Z][A-Z0-9_]*$",
+                "type": "string"
+              },
+              "details": {
+                "additionalProperties": true,
+                "description": "Extra facts about the failure.",
+                "type": "object"
+              },
+              "fields": {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Field name to code, for a rejected form.",
+                "type": "object"
+              },
+              "message": {
+                "description": "Optional English text.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "code"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "type": "object"
+      },
+      "Page": {
+        "description": "Where a list stands: page numbers start at 1, `pageSize` is at most 100.",
+        "properties": {
+          "number": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "size": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "totalItems": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "totalPages": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "number",
+          "size",
+          "totalItems",
+          "totalPages"
+        ],
+        "type": "object"
+      },
+      "Session": {
+        "properties": {
+          "csrfToken": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": "integer"
+          },
+          "sessionToken": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "description": "A site session token, sent by a server-side front-end that holds a front-end key. Not valid on the panel API.",
+        "scheme": "bearer",
+        "type": "http"
+      },
+      "sessionCookie": {
+        "description": "The session cookie set by login. A mutation also repeats the `pano_csrf_token` cookie in the `X-CSRF-Token` header. Behind a plain-http origin the cookie names end in `_http`.",
+        "in": "cookie",
+        "name": "pano_auth_token",
+        "type": "apiKey"
+      }
+    }
+  },
+  "info": {
+    "description": "The public API of the plugin pano-plugin-auth-guard, served below /api/plugins/pano-plugin-auth-guard.",
+    "summary": "Pano plugin API: pano-plugin-auth-guard",
+    "title": "Pano plugin API: pano-plugin-auth-guard",
+    "version": "1",
+    "x-pano-api-level": 1,
+    "x-pano-plugin-id": "pano-plugin-auth-guard",
+    "x-pano-scope": "plugin"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/2fa/disable": {
+      "post": {
+        "operationId": "TwoFactorDisable",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "code",
+                  "password"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "valid": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Turns 2FA off for the signed-in user after the password and a current code. `valid` is false for a wrong code.",
+        "tags": [
+          "2fa"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/2fa/setup": {
+      "post": {
+        "operationId": "TwoFactorSetupInit",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "alreadyEnabled": {
+                      "type": "boolean"
+                    },
+                    "issuer": {
+                      "type": "string"
+                    },
+                    "secret": {
+                      "type": "string"
+                    },
+                    "totpUri": {
+                      "type": "string"
+                    },
+                    "username": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Starts 2FA setup for the signed-in user and returns the secret and the otpauth URI. `alreadyEnabled` is true when 2FA is already on.",
+        "tags": [
+          "2fa"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/2fa/status": {
+      "get": {
+        "operationId": "TwoFactorStatus",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "twoFactorEnabled": {
+                      "type": "boolean"
+                    },
+                    "twoFactorGlobalEnabled": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "twoFactorEnabled",
+                    "twoFactorGlobalEnabled"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden: NO_PERMISSION",
+            "x-pano-error-codes": [
+              "NO_PERMISSION"
+            ]
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Tells whether 2FA is enabled on the site and for the signed-in user.",
+        "tags": [
+          "2fa"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/2fa/verify-setup": {
+      "post": {
+        "operationId": "TwoFactorSetupVerify",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "code"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "alreadyEnabled": {
+                      "type": "boolean"
+                    },
+                    "valid": {
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          },
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Finishes 2FA setup with a code from the authenticator app. `valid` is false for a wrong code.",
+        "tags": [
+          "2fa"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/config": {
+      "get": {
+        "operationId": "GetAuthGuardConfigPublic",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "captchaOnLogin": {
+                      "type": "boolean"
+                    },
+                    "captchaOnRegister": {
+                      "type": "boolean"
+                    },
+                    "captchaOnRenewPassword": {
+                      "type": "boolean"
+                    },
+                    "captchaOnResetPassword": {
+                      "type": "boolean"
+                    },
+                    "captchaOnVerifyEmail": {
+                      "type": "boolean"
+                    },
+                    "captchaOnVerifyNewEmail": {
+                      "type": "boolean"
+                    },
+                    "captchaProvider": {
+                      "type": "string"
+                    },
+                    "captchaSiteKey": {
+                      "type": "string"
+                    },
+                    "magicLoginEnabled": {
+                      "type": "boolean"
+                    },
+                    "recaptchaLegacy": {
+                      "type": "boolean"
+                    },
+                    "twoFactorEnabled": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "captchaOnLogin",
+                    "captchaOnRegister",
+                    "captchaOnRenewPassword",
+                    "captchaOnResetPassword",
+                    "captchaOnVerifyEmail",
+                    "captchaOnVerifyNewEmail",
+                    "captchaProvider",
+                    "captchaSiteKey",
+                    "magicLoginEnabled",
+                    "recaptchaLegacy",
+                    "twoFactorEnabled"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "summary": "Reads the public sign-in guard settings: captcha provider and site key, and which flows use it, 2FA and magic login.",
+        "tags": [
+          "config"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/magic-login/init": {
+      "post": {
+        "operationId": "MagicLoginInit",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "email"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "summary": "Sends a magic login link to the e-mail address. Answers the same for an unknown address.",
+        "tags": [
+          "magic-login"
+        ],
+        "x-pano-stability": "public"
+      }
+    },
+    "/magic-login/verify": {
+      "get": {
+        "operationId": "MagicLoginVerify",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden: MAGIC_LOGIN_LINK_EXPIRED",
+            "x-pano-error-codes": [
+              "MAGIC_LOGIN_LINK_EXPIRED"
+            ]
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "summary": "Signs in with the token of a magic login link and uses the token up.",
+        "tags": [
+          "magic-login"
+        ],
+        "x-pano-stability": "public"
+      },
+      "post": {
+        "operationId": "MagicLoginComplete",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "token"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            },
+            "description": "Success",
+            "headers": {
+              "Pano-Api-Level": {
+                "$ref": "#/components/headers/PanoApiLevel"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Forbidden: MAGIC_LOGIN_LINK_EXPIRED",
+            "x-pano-error-codes": [
+              "MAGIC_LOGIN_LINK_EXPIRED"
+            ]
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        },
+        "summary": "Signs in with the token of a magic login link, sent in the body, and uses the token up.",
+        "tags": [
+          "magic-login"
+        ],
+        "x-pano-stability": "public"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/plugins/pano-plugin-auth-guard"
+    }
+  ],
+  "tags": [
+    {
+      "name": "2fa"
+    },
+    {
+      "name": "config"
+    },
+    {
+      "name": "magic-login"
+    }
+  ]
+}

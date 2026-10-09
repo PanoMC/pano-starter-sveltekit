@@ -1,0 +1,12 @@
+{
+  "id": "pano-starter",
+  "title": "Pano starter",
+  "urls": {
+    "auth.login": "/login",
+    "auth.register": "/register",
+    "market.store": "/store",
+    "market.product": "/store/{slug}",
+    "market.checkout": "/store/checkout",
+    "market.order": "/store/order/{id}"
+  }
+}

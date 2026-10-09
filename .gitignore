@@ -1,0 +1,9 @@
+node_modules
+.svelte-kit
+build
+.env
+.env.*
+!.env.example
+.DS_Store
+# bun run package writes its zip next to the repo, but a local --out may land here
+*.zip

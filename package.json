@@ -1,0 +1,39 @@
+{
+  "name": "pano-starter-sveltekit",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "description": "A headless SvelteKit site for Pano. Every request to Pano goes through this server (BFF); the session token never reaches browser JavaScript.",
+  "scripts": {
+    "prepare": "svelte-kit sync || echo ''",
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "bun build/index.js",
+    "test": "bun test",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json && bun scripts/pano-client.mjs check",
+    "format": "prettier --write .",
+    "lint": "prettier --check .",
+    "package": "bun run build && bun scripts/package.mjs",
+    "e2e": "bun e2e/run.mjs",
+    "pano:pull": "bun scripts/pano-client.mjs pull"
+  },
+  "dependencies": {
+    "@panomc/client": "1.0.0-dev.62"
+  },
+  "devDependencies": {
+    "@panomc/client-gen": "1.0.0-dev.62",
+    "@sveltejs/adapter-node": "^5.5.4",
+    "@sveltejs/kit": "^2.57.1",
+    "@sveltejs/vite-plugin-svelte": "^7.0.0",
+    "@types/node": "^24.0.0",
+    "playwright": "1.61.1",
+    "prettier": "~3.8.3",
+    "prettier-plugin-svelte": "^3.5.1",
+    "svelte": "5.55.9",
+    "svelte-check": "^4.3.0",
+    "typescript": "^5.9.0",
+    "vite": "^8.0.9"
+  }
+}
