@@ -4,7 +4,7 @@
 // `bun build/index.js` (external upstream or its own origin, with ORIGIN set).
 //
 // Pano hands a custom app its internal front-end key, and that key gives cookie sessions, not the session token the
-// starter keeps in its own cookie, so sign-in needs a key from Panel -> Appearance -> Themes (gear button). A file named `.env`
+// starter keeps in its own cookie, so sign-in needs a key from Panel -> Appearance -> Themes (gear button "Site display settings" -> Site connection keys). A file named `.env`
 // next to this one may hold it (one `PANO_FRONTEND_KEY=pfk_...` line); it replaces the internal key and nothing else.
 import { existsSync, readFileSync } from 'node:fs'
 

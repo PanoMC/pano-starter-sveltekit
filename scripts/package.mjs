@@ -4,7 +4,7 @@
 //
 // Writes `<umbrella>/.open-frontend-run/artifacts/pano-starter.zip` by default (the folder next to this repo that holds
 // local build output), with `manifest.json` and `index.js` at the root and the adapter-node build under `build/`.
-// Upload it in Panel -> Appearance -> Themes -> gear button -> Custom apps and select it.
+// Upload it in Panel -> Appearance -> Themes -> gear button ("Site display settings") -> "My uploaded site" -> "Upload Site (.zip)" and select it.
 import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'

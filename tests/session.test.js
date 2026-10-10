@@ -21,7 +21,7 @@ import RegisterPage from '../src/routes/(auth)/register/+page.svelte'
 import { makeEvent, renderPage, runHandle, startPanoStub, thrown } from './helpers.js'
 
 const KEY_MESSAGE =
-  'Create a front-end key in Panel → Appearance → Themes → gear button (Front-end settings) and put it in .env as PANO_FRONTEND_KEY'
+  'Create a front-end key in Panel → Appearance → Themes → gear button (Site display settings) → Site connection keys and put it in .env as PANO_FRONTEND_KEY'
 
 let stub
 
