@@ -80,7 +80,7 @@ export function startSession(event, data, next) {
   if (typeof data.sessionToken !== 'string' || !data.sessionToken) {
     return fail(502, {
       message:
-        'Pano signed you in but sent no session token. Use a front-end key created in the panel (Appearance → Front-end), not the internal one.',
+        'Pano signed you in but sent no session token. Use a front-end key created in the panel (Appearance → Themes → gear button), not the internal one.',
       code: 'SESSION_TOKEN_MISSING'
     })
   }

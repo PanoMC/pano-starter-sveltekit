@@ -31,7 +31,7 @@ export async function useAddressAsSite(admin, address) {
 }
 
 /**
- * The origins a browser page may call Pano from with its cookie (panel: Appearance -> Front-end -> Origins).
+ * The origins a browser page may call Pano from with its cookie (panel: Appearance -> Themes -> gear button -> Origins).
  * @param {Api} admin @param {string[]} origins
  */
 export async function setAllowedOrigins(admin, origins) {

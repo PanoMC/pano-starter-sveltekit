@@ -8,7 +8,7 @@ import { getPluginPackages } from '$lib/pano/core/index.js'
 export const SESSION_COOKIE = 'pano_session'
 
 export const KEY_MESSAGE =
-  'Create a front-end key in Panel → Appearance → Front-end and put it in .env as PANO_FRONTEND_KEY'
+  'Create a front-end key in Panel → Appearance → Themes → gear button (Front-end settings) and put it in .env as PANO_FRONTEND_KEY'
 
 const DEFAULT_API_URL = 'http://localhost:8088/api'
 const PLUGINS_TTL_MS = 60_000
