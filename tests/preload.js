@@ -1,23 +1,21 @@
-// Lets `bun test` load the SvelteKit modules outside Vite: $lib, $env, $app and .svelte files (compiled for SSR).
+// Lets `bun test` load the SvelteKit modules outside Vite: the server env, $app and .svelte files (compiled for SSR). `#lib/*` is a
+// subpath import of package.json, which Bun resolves itself.
 import { plugin } from 'bun'
 import { compile } from 'svelte/compiler'
 import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
-
-const lib = resolve(import.meta.dir, '../src/lib')
 
 plugin({
   name: 'sveltekit-test-shims',
   setup(build) {
-    // The real $env/dynamic/private reads process.env at call time; so does this.
-    build.module('$env/dynamic/private', () => ({ exports: { env: process.env }, loader: 'object' }))
+    // src/lib/server/env.js hands over SvelteKit's $app/env/private; here it is process.env itself, read at call time,
+    // so a test changes a variable by setting it.
+    build.onLoad({ filter: /\/src\/lib\/server\/env\.js$/ }, () => ({
+      contents: 'export const env = process.env',
+      loader: 'js'
+    }))
     build.module('$app/forms', () => ({
       exports: { enhance: () => ({ destroy() {} }), applyAction: async () => {}, deserialize: JSON.parse },
       loader: 'object'
-    }))
-
-    build.onResolve({ filter: /^\$lib(\/|$)/ }, (args) => ({
-      path: resolve(lib, args.path.slice('$lib/'.length))
     }))
 
     build.onLoad({ filter: /\.svelte$/ }, ({ path }) => {

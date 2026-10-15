@@ -2,7 +2,7 @@
   import { onMount } from 'svelte'
   import { getMarket } from './market.js'
 
-  /** @type {{ product: import('$lib/pano/plugins/market/types.js').MarketProductDetail, user: { username: string } | null }} */
+  /** @type {{ product: import('#lib/pano/plugins/market/types.js').MarketProductDetail, user: { username: string } | null }} */
   let { product, user } = $props()
 
   const variants = $derived(product.variants ?? [])

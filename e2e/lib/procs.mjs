@@ -1,8 +1,8 @@
 // Processes of the run. Every one is started with a known PID and stopped by exactly that PID, never by a pattern.
 import { spawn, spawnSync } from 'node:child_process'
-import { closeSync, mkdirSync, openSync } from 'node:fs'
+import { closeSync, copyFileSync, existsSync, mkdirSync, openSync, symlinkSync } from 'node:fs'
 import { join } from 'node:path'
-import { buildEntry, workDir } from './paths.mjs'
+import { repo, workDir } from './paths.mjs'
 
 /** @param {number} ms */
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -47,8 +47,9 @@ export async function waitForFreePort(port, seconds = 20) {
 }
 
 /**
- * The built starter as its own process: `bun build/index.js`. It runs from the work folder, so a `.env` of a developer
- * checkout can never leak into it, and only the variables given here (plus PATH) are set.
+ * The built starter as its own process: its entry (index.js, which applies ORIGIN) copied into the work folder next to a
+ * link to build/, so a `.env` of a developer checkout can never leak into it, and only the variables given here (plus
+ * PATH) are set.
  * @param {{ name: string, port: number, env: Record<string, string|undefined> }} options
  */
 export async function startStarter({ name, port, env }) {
@@ -62,7 +63,11 @@ export async function startStarter({ name, port, env }) {
     if (value !== undefined && value !== '') clean[key] = value
   }
 
-  const child = spawn(process.execPath, [buildEntry], {
+  const entry = join(workDir, 'index.js')
+  copyFileSync(join(repo, 'index.js'), entry)
+  if (!existsSync(join(workDir, 'build'))) symlinkSync(join(repo, 'build'), join(workDir, 'build'))
+
+  const child = spawn(process.execPath, [entry], {
     cwd: workDir,
     env: clean,
     stdio: ['ignore', log, log]

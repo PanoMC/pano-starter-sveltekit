@@ -1,5 +1,5 @@
 <script>
-  import { categoryOf, excerpt, formatDate, writerOf } from '$lib/posts.js'
+  import { categoryOf, excerpt, formatDate, writerOf } from '#lib/posts.js'
 
   let { data } = $props()
 </script>

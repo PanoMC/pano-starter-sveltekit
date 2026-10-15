@@ -1,6 +1,6 @@
 # pano-starter-sveltekit
 
-A headless SvelteKit site for Pano: Svelte 5, SvelteKit 2, `adapter-node`, Bun, JavaScript with JSDoc types. No Bootstrap, no theme-core.
+A headless SvelteKit site for Pano: Svelte 5, SvelteKit 3, `adapter-node`, Bun, JavaScript with JSDoc types. No Bootstrap, no theme-core.
 
 Every call to Pano is made by this server (a BFF). The session token Pano returns at login is stored in an `HttpOnly` cookie and never reaches browser JavaScript.
 
@@ -16,23 +16,23 @@ Create the front-end key in Pano (in the panel: "Site connection key"): Panel ->
 
 ## Three ways to run it
 
-| Mode              | How                                                                                                | Origin                                   |
-| ----------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------- |
-| Own origin        | `bun run build && bun start` (or `bun run dev`) on its own host name; Pano is reached by `API_URL` | the site's own, e.g. `https://shop.test` |
-| External upstream | run `bun build/index.js` anywhere and let Pano proxy to it; set `ORIGIN` to Pano's public address  | Pano's                                   |
+| Mode              | How                                                                                                                                                                     | Origin                                   |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| Own origin        | `bun run build && bun start` (or `bun run dev`) on its own host name; Pano is reached by `API_URL`                                                                      | the site's own, e.g. `https://shop.test` |
+| External upstream | run `bun index.js` (build/ next to it) anywhere and let Pano proxy to it; set `ORIGIN` to Pano's public address                                                         | Pano's                                   |
 | Custom app        | `bun run package`, upload the zip in Panel -> Appearance -> Themes -> gear button ("Site display settings") -> "My uploaded site" -> "Upload Site (.zip)" and select it | Pano's; Pano runs it and sets the env    |
 
 `bun run package` builds and zips `manifest.json`, `index.js` and `build/` into `.open-frontend-run/artifacts/pano-starter.zip` (`--out <file>` changes the path). `bun run e2e` runs the whole scenario against an isolated Pano instance in all three modes; it needs the frozen bundle in `.open-frontend-run/bundle` and a database, so it is not part of `bun test`.
 
 ## .env keys
 
-| Key                 | Meaning                                                                                               |
-| ------------------- | ----------------------------------------------------------------------------------------------------- |
-| `API_URL`           | Where Pano answers; a trailing `/api` or `/api/v1` is optional. `PANO_API_URL` wins when both are set |
-| `PANO_FRONTEND_KEY` | Panel -> Appearance -> Themes -> gear button ("Site display settings") -> "Site connection keys" -> Manage. Without it only public pages work                 |
-| `PANO_SITE_URL`     | Public address of this site (decides the cookie `Secure` flag and the allowed form origin)            |
-| `ORIGIN`            | adapter-node: the public origin, needed when the site sits behind a proxy                             |
-| `PORT`, `HOST`      | adapter-node listen address (Pano sets them in custom-app mode)                                       |
+| Key                 | Meaning                                                                                                                                       |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `API_URL`           | Where Pano answers; a trailing `/api` or `/api/v1` is optional. `PANO_API_URL` wins when both are set                                         |
+| `PANO_FRONTEND_KEY` | Panel -> Appearance -> Themes -> gear button ("Site display settings") -> "Site connection keys" -> Manage. Without it only public pages work |
+| `PANO_SITE_URL`     | Public address of this site (decides the cookie `Secure` flag and the allowed form origin)                                                    |
+| `ORIGIN`            | the public origin, needed when the site sits behind a proxy (`index.js` applies it; adapter-node 6 no longer reads it)                        |
+| `PORT`, `HOST`      | adapter-node listen address (Pano sets them in custom-app mode)                                                                               |
 
 Calls from the server to Pano use the global `fetch`, never SvelteKit's `event.fetch`, so a site served on Pano's own origin does not call itself. The `/pano` proxy passes a redirect of Pano (for example an avatar on its image host) on to the browser for `GET` and `HEAD`.
 

@@ -16,9 +16,7 @@ export function money(amount, currency) {
 
 /** Where a product image is served: Pano's file endpoint, through the proxy. @param {string|null|undefined} fileName */
 export function imageUrl(fileName) {
-  return fileName
-    ? `/pano/api/plugins/pano-plugin-market/products/image/${encodeURIComponent(fileName)}`
-    : ''
+  return fileName ? `/pano/api/plugins/pano-plugin-market/products/image/${encodeURIComponent(fileName)}` : ''
 }
 
 /** `/store?...` with the filter in the query. Empty values are left out. @param {Record<string, string|number|null|undefined>} query */

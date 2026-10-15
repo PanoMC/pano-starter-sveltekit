@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit'
-import { getPostDetail } from '$lib/pano/core/index.js'
+import { getPostDetail } from '#lib/pano/core/index.js'
 
 /** @type {import('@sveltejs/kit').ServerLoad} */
 export async function load({ locals, params }) {

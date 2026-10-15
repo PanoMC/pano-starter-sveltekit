@@ -1,9 +1,9 @@
 // Everything that talks to Pano from this server: the client, the visitor's IP, the session cookie, the plugin list.
 // Server only. The front-end key and the session token never go to the browser.
 import { isIP } from 'node:net'
-import { env } from '$env/dynamic/private'
+import { env } from '#lib/server/env.js'
 import { createClient } from '@panomc/client'
-import { getPluginPackages } from '$lib/pano/core/index.js'
+import { getPluginPackages } from '#lib/pano/core/index.js'
 
 export const SESSION_COOKIE = 'pano_session'
 
@@ -113,7 +113,7 @@ function isSecure(event) {
  * @param {{ sessionToken: string, expiresAt?: number }} session
  */
 export function setSession(event, session) {
-  /** @type {import('cookie').CookieSerializeOptions & { path: string }} */
+  /** @type {import('cookie').SerializeOptions & { path: string }} */
   const options = { path: '/', httpOnly: true, secure: isSecure(event), sameSite: 'lax' }
 
   if (typeof session.expiresAt === 'number' && session.expiresAt > 0) {

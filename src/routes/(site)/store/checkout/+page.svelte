@@ -1,6 +1,6 @@
 <script>
-  import Checkout from '$lib/store/Checkout.svelte'
-  import NotInstalled from '$lib/store/NotInstalled.svelte'
+  import Checkout from '#lib/store/Checkout.svelte'
+  import NotInstalled from '#lib/store/NotInstalled.svelte'
 
   /** @type {{ data: any }} */
   let { data } = $props()

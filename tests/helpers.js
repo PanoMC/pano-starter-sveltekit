@@ -1,4 +1,7 @@
 import { render } from 'svelte/server'
+import { copyFileSync, mkdtempSync, symlinkSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join, resolve } from 'node:path'
 
 /** A Bun.serve stand-in for Pano. Records every request it gets. */
 export function startPanoStub() {
@@ -204,4 +207,16 @@ export async function thrown(fn) {
 export async function renderPage(Component, props) {
   const { body } = render(Component, { props })
   return body
+}
+
+/**
+ * The app entry (index.js) in a folder of its own, next to a link to this checkout's build/: started from here it never
+ * reads a developer's `.env`. Returns the path of that index.js.
+ */
+export function stageEntry() {
+  const repo = resolve(import.meta.dir, '..')
+  const dir = mkdtempSync(join(tmpdir(), 'pano-starter-'))
+  copyFileSync(join(repo, 'index.js'), join(dir, 'index.js'))
+  symlinkSync(join(repo, 'build'), join(dir, 'build'))
+  return join(dir, 'index.js')
 }

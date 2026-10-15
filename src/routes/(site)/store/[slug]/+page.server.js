@@ -1,5 +1,5 @@
-import { getStoreProduct } from '$lib/pano/plugins/market/index.js'
-import { failPage, hasMarket } from '$lib/store/load.server.js'
+import { getStoreProduct } from '#lib/pano/plugins/market/index.js'
+import { failPage, hasMarket } from '#lib/store/load.server.js'
 
 /** @type {import('@sveltejs/kit').ServerLoad} */
 export async function load({ locals, params }) {

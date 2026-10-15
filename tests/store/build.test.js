@@ -4,9 +4,12 @@ import { afterAll, beforeAll, describe, expect, test } from 'bun:test'
 import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { startMarketStub } from './stub.js'
+import { stageEntry } from '../helpers.js'
 
-const entry = resolve(import.meta.dir, '../../build/index.js')
-const built = existsSync(entry)
+// the entry applies ORIGIN (adapter-node 6 has no ORIGIN variable of its own); the build must exist
+const built = existsSync(resolve(import.meta.dir, '../../build/index.js'))
+
+const entry = built ? stageEntry() : ''
 
 describe.skipIf(!built)('production build: store and proxy', () => {
   /** @type {ReturnType<typeof startMarketStub>} */

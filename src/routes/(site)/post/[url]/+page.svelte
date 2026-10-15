@@ -1,5 +1,5 @@
 <script>
-  import { categoryOf, formatDate, writerOf } from '$lib/posts.js'
+  import { categoryOf, formatDate, writerOf } from '#lib/posts.js'
 
   let { data } = $props()
   let post = $derived(data.post)

@@ -151,9 +151,7 @@ describe('with the market plugin', () => {
     expect(html).toContain('Order ord1')
     expect(html).toContain('Waiting for payment')
 
-    const call = withMarket.requests.find((r) =>
-      r.path.startsWith('/api/plugins/pano-plugin-market/orders/')
-    )
+    const call = withMarket.requests.find((r) => r.path.startsWith('/api/plugins/pano-plugin-market/orders/'))
     expect(call.path).toBe('/api/plugins/pano-plugin-market/orders/ord1')
     expect(call.headers['x-order-token']).toBeUndefined()
   })

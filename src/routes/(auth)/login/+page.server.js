@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit'
-import { completePendingAuth, login } from '$lib/pano/core/index.js'
-import { failureToForm, keyMissing, hasFrontendKey, startSession, text } from '$lib/server/auth-flow.js'
-import { KEY_MESSAGE, safeNext } from '$lib/server/pano.js'
+import { completePendingAuth, login } from '#lib/pano/core/index.js'
+import { failureToForm, keyMissing, hasFrontendKey, startSession, text } from '#lib/server/auth-flow.js'
+import { KEY_MESSAGE, safeNext } from '#lib/server/pano.js'
 
 /** @type {import('@sveltejs/kit').ServerLoad} */
 export async function load({ locals, url }) {
@@ -38,7 +38,7 @@ export const actions = {
       )
     }
 
-    /** @type {import('$lib/pano/core/types.js').LoginRequest} */
+    /** @type {import('#lib/pano/core/types.js').LoginRequest} */
     const body = { usernameOrEmail, password }
     for (const name of OPTIONAL) {
       const value = text(form, name).trim()

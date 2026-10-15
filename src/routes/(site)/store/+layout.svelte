@@ -1,6 +1,6 @@
 <script>
-  import CartLink from '$lib/store/CartLink.svelte'
-  import Toasts from '$lib/store/Toasts.svelte'
+  import CartLink from '#lib/store/CartLink.svelte'
+  import Toasts from '#lib/store/Toasts.svelte'
 
   /** @type {{ data: any, children: import('svelte').Snippet }} */
   let { data, children } = $props()

@@ -1,7 +1,7 @@
 <script>
   import '../app.css'
   import { onMount } from 'svelte'
-  import { widgetUrls } from '$lib/pano/widgets.js'
+  import { widgetUrls } from '#lib/pano/widgets.js'
 
   let { data, children } = $props()
 

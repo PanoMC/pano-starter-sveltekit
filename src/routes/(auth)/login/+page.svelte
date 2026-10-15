@@ -1,7 +1,7 @@
 <script>
   import { enhance } from '$app/forms'
-  import Field from '$lib/components/Field.svelte'
-  import FormMessage from '$lib/components/FormMessage.svelte'
+  import Field from '#lib/components/Field.svelte'
+  import FormMessage from '#lib/components/FormMessage.svelte'
 
   let { data, form } = $props()
 

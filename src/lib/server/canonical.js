@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/private'
+import { env } from '#lib/server/env.js'
 
 const LOOPBACK = new Set(['localhost', '127.0.0.1', '[::1]'])
 

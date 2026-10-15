@@ -1,7 +1,7 @@
 <script>
-  import AddToCart from '$lib/store/AddToCart.svelte'
-  import NotInstalled from '$lib/store/NotInstalled.svelte'
-  import { imageUrl, money } from '$lib/store/format.js'
+  import AddToCart from '#lib/store/AddToCart.svelte'
+  import NotInstalled from '#lib/store/NotInstalled.svelte'
+  import { imageUrl, money } from '#lib/store/format.js'
 
   /** @type {{ data: any }} */
   let { data } = $props()

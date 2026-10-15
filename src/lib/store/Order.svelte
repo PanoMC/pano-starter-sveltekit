@@ -4,7 +4,7 @@
   import { getMarket } from './market.js'
   import { afterCheckout, readOrderToken } from './payment.js'
 
-  /** @type {{ order: import('$lib/pano/plugins/market/types.js').MarketOrder, user: { username: string } | null }} */
+  /** @type {{ order: import('#lib/pano/plugins/market/types.js').MarketOrder, user: { username: string } | null }} */
   let { order: initial, user } = $props()
 
   /** Statuses that still change by themselves (the payment is on its way). */
@@ -12,7 +12,7 @@
   const POLL_MS = 5000
   const POLL_LIMIT = 60
 
-  /** @type {import('$lib/pano/plugins/market/types.js').MarketOrder|null} */
+  /** @type {import('#lib/pano/plugins/market/types.js').MarketOrder|null} */
   let fetched = $state(null)
   const order = $derived(fetched ?? initial)
   /** The documented line has no id and total yet; the answer carries both. */

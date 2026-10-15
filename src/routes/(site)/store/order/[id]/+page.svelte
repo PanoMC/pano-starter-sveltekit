@@ -1,6 +1,6 @@
 <script>
-  import NotInstalled from '$lib/store/NotInstalled.svelte'
-  import Order from '$lib/store/Order.svelte'
+  import NotInstalled from '#lib/store/NotInstalled.svelte'
+  import Order from '#lib/store/Order.svelte'
 
   /** @type {{ data: any }} */
   let { data } = $props()

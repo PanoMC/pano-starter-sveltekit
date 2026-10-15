@@ -3,10 +3,10 @@
 import { afterAll, beforeAll, describe, expect, test } from 'bun:test'
 import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { startPanoStub } from './helpers.js'
+import { stageEntry, startPanoStub } from './helpers.js'
 
-const entry = resolve(import.meta.dir, '../build/index.js')
-const built = existsSync(entry)
+// the entry applies ORIGIN (adapter-node 6 has no ORIGIN variable of its own); the build must exist
+const built = existsSync(resolve(import.meta.dir, '../build/index.js'))
 
 /** @param {Record<string,string>} fields @param {string} ip */
 const loginRequest = (origin, fields, ip) => ({
@@ -20,6 +20,8 @@ const loginRequest = (origin, fields, ip) => ({
   },
   body: new URLSearchParams(fields)
 })
+
+const entry = built ? stageEntry() : ''
 
 describe.skipIf(!built)('production build', () => {
   /** @type {ReturnType<typeof startPanoStub>} */

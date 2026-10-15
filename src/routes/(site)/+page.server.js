@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit'
-import { getPosts } from '$lib/pano/core/index.js'
-import { readPosts } from '$lib/posts.js'
+import { getPosts } from '#lib/pano/core/index.js'
+import { readPosts } from '#lib/posts.js'
 
 /** @type {import('@sveltejs/kit').ServerLoad} */
 export async function load({ locals, url }) {

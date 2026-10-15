@@ -2,7 +2,7 @@
 
 /**
  * @param {any} data body of GET /api/v1/posts
- * @returns {{ items: import('$lib/pano/core/types.js').PostSummary[], page: { number: number, totalPages: number } }}
+ * @returns {{ items: import('#lib/pano/core/types.js').PostSummary[], page: { number: number, totalPages: number } }}
  */
 export function readPosts(data, requestedPage = 1) {
   const items = data?.items ?? data?.posts ?? []

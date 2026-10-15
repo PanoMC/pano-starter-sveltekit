@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit'
-import { register } from '$lib/pano/core/index.js'
-import { KEY_MESSAGE } from '$lib/server/pano.js'
-import { failureToForm, keyMissing, hasFrontendKey, startSession, text } from '$lib/server/auth-flow.js'
+import { register } from '#lib/pano/core/index.js'
+import { KEY_MESSAGE } from '#lib/server/pano.js'
+import { failureToForm, keyMissing, hasFrontendKey, startSession, text } from '#lib/server/auth-flow.js'
 
 /** @type {import('@sveltejs/kit').ServerLoad} */
 export async function load({ locals }) {
@@ -26,7 +26,7 @@ export const actions = {
     // Registering without a key would work, but Pano would see every sign-up from this server's IP.
     if (!hasFrontendKey()) return keyMissing(values)
 
-    /** @type {import('$lib/pano/core/types.js').RegisterRequest} */
+    /** @type {import('#lib/pano/core/types.js').RegisterRequest} */
     const body = { email, password, passwordRepeat, agreement }
     if (username) body.username = username
 

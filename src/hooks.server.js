@@ -1,10 +1,10 @@
-import { getCredentials } from '$lib/pano/core/index.js'
-import { loopbackRedirect } from '$lib/server/canonical.js'
-import { SESSION_COOKIE, clearSession, panoFor, plugins } from '$lib/server/pano.js'
+import { getCredentials } from '#lib/pano/core/index.js'
+import { loopbackRedirect } from '#lib/server/canonical.js'
+import { SESSION_COOKIE, clearSession, panoFor, plugins } from '#lib/server/pano.js'
 
 /**
  * Every request: build the Pano client from the cookie, load the signed-in user once, know the installed plugins.
- * @type {import('@sveltejs/kit').Handle}
+ * @type {import('@sveltejs/kit/hooks').Handle}
  */
 export async function handle({ event, resolve }) {
   // localhost and 127.0.0.1 are two origins: a page opened through the other one goes to ORIGIN, so forms work.

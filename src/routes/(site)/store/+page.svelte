@@ -1,7 +1,7 @@
 <script>
-  import NotInstalled from '$lib/store/NotInstalled.svelte'
-  import ProductCard from '$lib/store/ProductCard.svelte'
-  import { storeUrl } from '$lib/store/format.js'
+  import NotInstalled from '#lib/store/NotInstalled.svelte'
+  import ProductCard from '#lib/store/ProductCard.svelte'
+  import { storeUrl } from '#lib/store/format.js'
 
   /** @type {{ data: any }} */
   let { data } = $props()

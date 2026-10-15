@@ -1,7 +1,7 @@
 // Browser side of the store: market's compiled controllers (cart, checkout draft, api) driven through the /pano proxy.
 // No Svelte in here: components wrap `subscribe` in `$state` themselves. Call these from `onMount` or an event handler,
 // never during server rendering (the cart lives in the browser).
-import { create, createHost } from '$lib/pano/plugins/market/controllers/controllers.mjs'
+import { create, createHost } from '#lib/pano/plugins/market/controllers/controllers.mjs'
 
 /** Where the proxy of src/routes/pano/[...path] is mounted: the controllers add `/api/v1/...` themselves. */
 export const BASE_URL = '/pano'
@@ -91,7 +91,7 @@ export function getMarket(user, options = {}) {
 
   const host = session.host
 
-  /** @type {import('$lib/pano/plugins/market/controllers/controllers.types.js').Controller<any, any>} */
+  /** @type {import('#lib/pano/plugins/market/controllers/controllers.types.js').Controller<any, any>} */
   const cart = create('cart', host)
 
   // Guest or server cart, by the user. Idempotent per user, so every caller may ask.

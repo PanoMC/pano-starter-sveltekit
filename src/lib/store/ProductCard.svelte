@@ -1,7 +1,7 @@
 <script>
   import { imageUrl, money } from './format.js'
 
-  /** @type {{ product: import('$lib/pano/plugins/market/types.js').MarketProductCard }} */
+  /** @type {{ product: import('#lib/pano/plugins/market/types.js').MarketProductCard }} */
   let { product } = $props()
 </script>
 

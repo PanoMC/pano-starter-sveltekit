@@ -1,6 +1,6 @@
-import { getStore, getStoreProducts } from '$lib/pano/plugins/market/index.js'
-import { failPage, hasMarket, positiveInt } from '$lib/store/load.server.js'
-import { flattenCategories } from '$lib/store/format.js'
+import { getStore, getStoreProducts } from '#lib/pano/plugins/market/index.js'
+import { failPage, hasMarket, positiveInt } from '#lib/store/load.server.js'
+import { flattenCategories } from '#lib/store/format.js'
 
 const SORTS = new Set(['priority', 'newest', 'price-asc', 'price-desc', 'bestselling'])
 

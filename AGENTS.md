@@ -5,7 +5,7 @@ description; this file is the short version.
 
 ## What this is
 
-`pano-starter-sveltekit` is the official start of a headless Pano site: SvelteKit 2, Svelte 5, `adapter-node`, Bun,
+`pano-starter-sveltekit` is the official start of a headless Pano site: SvelteKit 3, Svelte 5, `adapter-node`, Bun,
 JavaScript with JSDoc. No Bootstrap, no theme-core. Every call to Pano is made by this server (a BFF); the session token
 Pano returns at login is kept in an `HttpOnly` cookie. It runs in three modes from one build: own origin, external
 upstream proxied by Pano, custom app run by Pano (`bun run package` makes the zip).

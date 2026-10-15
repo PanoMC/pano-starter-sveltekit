@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit'
-import { logout } from '$lib/pano/core/index.js'
-import { SESSION_COOKIE, clearSession } from '$lib/server/pano.js'
+import { logout } from '#lib/pano/core/index.js'
+import { SESSION_COOKIE, clearSession } from '#lib/server/pano.js'
 
 /** Logging out is a POST; a visit by link goes home. */
 export function load() {

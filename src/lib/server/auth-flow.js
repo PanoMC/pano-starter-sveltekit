@@ -1,6 +1,6 @@
 // Shared by the login and register actions: turn Pano's answers into form results.
 import { fail, redirect } from '@sveltejs/kit'
-import { KEY_MESSAGE, hasFrontendKey, safeNext, setSession } from '$lib/server/pano.js'
+import { KEY_MESSAGE, hasFrontendKey, safeNext, setSession } from '#lib/server/pano.js'
 
 /** Messages for the codes a visitor can fix. Anything else shows Pano's own message, then the code. */
 const MESSAGES = {

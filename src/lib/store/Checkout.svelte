@@ -5,7 +5,7 @@
   import { checkoutMessage, money } from './format.js'
   import { getMarket } from './market.js'
 
-  /** @type {{ config: import('$lib/pano/plugins/market/types.js').GetCheckoutConfigResponse, user: { username: string } | null }} */
+  /** @type {{ config: import('#lib/pano/plugins/market/types.js').GetCheckoutConfigResponse, user: { username: string } | null }} */
   let { config, user } = $props()
 
   /** @type {any} */

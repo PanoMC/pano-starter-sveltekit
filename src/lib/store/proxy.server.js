@@ -1,7 +1,7 @@
 // The /pano proxy (BFF): browser code (the cart and checkout controllers, widgets) talks to Pano through this server.
 // The browser never holds the front-end key or the session token: they are added here, on the way out.
-import { env } from '$env/dynamic/private'
-import { SESSION_COOKIE, clientIpOf, panoOrigin } from '$lib/server/pano.js'
+import { env } from '#lib/server/env.js'
+import { SESSION_COOKIE, clientIpOf, panoOrigin } from '#lib/server/pano.js'
 
 /** Largest request body we forward. */
 export const MAX_BODY_BYTES = 5 * 1024 * 1024
@@ -240,7 +240,12 @@ export async function proxyToPano(event) {
     const location = upstream.headers.get('location')
     if ((method !== 'GET' && method !== 'HEAD') || !location)
       return errorResponse(502, 'BAD_GATEWAY', 'Pano answered with a redirect.')
-    out.set('location', /^\/api\/(?:v1\/(?!panel|auth)|plugins\/[^/]+\/(?!panel(?:[/?#]|$)))/i.test(location) ? `/pano${location}` : location)
+    out.set(
+      'location',
+      /^\/api\/(?:v1\/(?!panel|auth)|plugins\/[^/]+\/(?!panel(?:[/?#]|$)))/i.test(location)
+        ? `/pano${location}`
+        : location
+    )
     await upstream.body?.cancel().catch(() => {})
     return new Response(null, { status: upstream.status, headers: out })
   }
