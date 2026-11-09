@@ -169,12 +169,16 @@ export function clearSession(event) {
 }
 
 /**
- * Only same-site paths: "/profile" yes, "//evil.test" and "https://evil.test" no.
+ * Only same-site paths: "/profile" yes, "//evil.test", "https://evil.test" and "/<tab>/evil.test" no. Control
+ * characters and whitespace are refused: browsers drop a tab or newline in Location, so "/<tab>/x" would become "//x".
  * @param {FormDataEntryValue|string|null|undefined} next
  */
 export function safeNext(next) {
-  return typeof next === 'string' && /^\/(?![/\\])/.test(next) ? next : '/'
+  return typeof next === 'string' && /^\/(?![/\\])/.test(next) && !UNSAFE_IN_PATH.test(next) ? next : '/'
 }
+
+// ASCII control characters (0x00-0x1f, 0x7f) and any whitespace
+const UNSAFE_IN_PATH = new RegExp('[\\x00-\\x1f\\x7f\\s]')
 
 /** @type {{ at: number, ttl: number, origin: string, value: Set<string> } | null} */
 let pluginsCache = null

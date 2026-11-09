@@ -239,6 +239,12 @@ describe('with a front-end key', () => {
     expect(safeNext('//evil.test')).toBe('/')
     expect(safeNext('/\\evil.test')).toBe('/')
     expect(safeNext('https://evil.test')).toBe('/')
+    expect(safeNext('/\t/evil.test')).toBe('/')
+    expect(safeNext('/\n/evil.test')).toBe('/')
+    expect(safeNext('/\r\n/evil.test')).toBe('/')
+    expect(safeNext('/ /evil.test')).toBe('/')
+    expect(safeNext('/a' + String.fromCharCode(0) + 'b')).toBe('/')
+    expect(safeNext('/store?page=2#top')).toBe('/store?page=2#top')
     expect(safeNext(null)).toBe('/')
 
     const { redirect } = await signIn(
