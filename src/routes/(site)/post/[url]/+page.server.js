@@ -1,5 +1,6 @@
 import { error } from '@sveltejs/kit'
 import { getPostDetail } from '#lib/pano/core/index.js'
+import { sanitizePostHtml } from '#lib/server/html.js'
 
 /** @type {import('@sveltejs/kit').ServerLoad} */
 export async function load({ locals, params }) {
@@ -16,7 +17,7 @@ export async function load({ locals, params }) {
   const { post, previousPost, nextPost } = result.data
 
   return {
-    post,
+    post: { ...post, text: sanitizePostHtml(post.text) },
     previous: typeof previousPost === 'object' ? previousPost : null,
     next: typeof nextPost === 'object' ? nextPost : null
   }

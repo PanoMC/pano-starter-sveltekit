@@ -71,7 +71,10 @@ export function startPanoStub() {
         const post = posts.find((p) => p.url === decodeURIComponent(path.slice('/api/v1/posts/'.length)))
         if (!post) return error(404, 'POST_NOT_FOUND')
         return json(200, {
-          post: { ...post, text: '<p>Full body</p>' },
+          post: {
+            ...post,
+            text: '<p>Full body</p><img src="x" onerror="alert(1)"><script>alert(2)</script>'
+          },
           previousPost: '-',
           nextPost: { id: 2, title: 'Second post', url: 'second' }
         })

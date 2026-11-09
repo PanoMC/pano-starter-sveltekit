@@ -6,6 +6,6 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   // SvelteKit 3 takes its options here; there is no svelte.config.js
   plugins: [sveltekit({ adapter: adapter(), preprocess: vitePreprocess() })],
-  // the package zip ships no node_modules, so the client is bundled into the server build
-  ssr: { noExternal: ['@panomc/client'] }
+  // the package zip ships no node_modules, so the client and the post sanitizer are bundled into the server build
+  ssr: { noExternal: ['@panomc/client', 'sanitize-html'] }
 })

@@ -20,7 +20,8 @@
     "pano:pull": "bun scripts/pano-client.mjs pull"
   },
   "dependencies": {
-    "@panomc/client": "1.0.0-dev.65"
+    "@panomc/client": "1.0.0-dev.65",
+    "sanitize-html": "2.18.1"
   },
   "devDependencies": {
     "@panomc/client-gen": "1.0.0-dev.65",

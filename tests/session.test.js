@@ -72,6 +72,9 @@ describe('no front-end key', () => {
 
     expect(data.previous).toBeNull()
     expect(html).toContain('<p>Full body</p>')
+    // a post body is cleaned before {@html}
+    expect(html).not.toContain('onerror')
+    expect(html).not.toContain('<script>alert(2)')
     expect(html).toContain('Second post →')
   })
 

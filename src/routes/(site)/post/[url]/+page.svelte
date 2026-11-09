@@ -21,8 +21,7 @@
     {#if categoryOf(post)}· {categoryOf(post)}{/if}
   </p>
 
-  <!-- Post bodies are HTML written by your staff in Pano's panel, so they are trusted. Sanitize here
-       (for example with sanitize-html) if staff you do not fully trust can publish. -->
+  <!-- Post bodies are HTML written in Pano's panel; +page.server.js cleans them (src/lib/server/html.js). -->
   <div class="body">{@html post.text}</div>
 </article>
 
