@@ -19,6 +19,11 @@ export const variables = defineEnvVars({
     description: "The site's public address (Pano sets it for a custom app)",
     schema: optional
   },
+  TRUSTED_PROXIES: {
+    description:
+      'Proxies whose X-Forwarded-For is believed: comma separated IPs and the words loopback / private (default: loopback for a custom app run by Pano, else none)',
+    schema: optional
+  },
   ORIGIN: {
     description: 'The public origin when the site sits behind a proxy (index.js applies it)',
     schema: optional

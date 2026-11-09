@@ -34,6 +34,8 @@ beforeEach(() => {
   withoutMarket.clear()
   resetPluginsCache()
   delete process.env.PANO_API_URL
+  // the tests stand behind Pano's proxy on loopback, like a custom app
+  process.env.TRUSTED_PROXIES = 'loopback'
   delete process.env.PANO_FRONTEND_KEY
   delete process.env.PANO_SITE_URL
 })

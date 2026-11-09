@@ -16,6 +16,8 @@ beforeEach(() => {
   stub.clear()
   process.env.API_URL = `${stub.url}/api`
   delete process.env.PANO_API_URL
+  // the tests stand behind Pano's proxy on loopback, like a custom app
+  process.env.TRUSTED_PROXIES = 'loopback'
   delete process.env.PANO_FRONTEND_KEY
   delete process.env.PANO_SITE_URL
 })

@@ -43,6 +43,8 @@ describe.skipIf(!built)('production build', () => {
         HOST: '127.0.0.1',
         ORIGIN: origin,
         API_URL: `${stub.url}/api`,
+        // the requests come from loopback, like Pano's proxy in front of a custom app
+        TRUSTED_PROXIES: 'loopback',
         ...extraEnv
       },
       stdout: 'ignore',

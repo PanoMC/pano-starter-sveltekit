@@ -52,10 +52,41 @@ function isPrivateAddress(ip) {
   )
 }
 
+/** Is `ip` a loopback address? @param {string} ip */
+function isLoopback(ip) {
+  const v4 = /^::ffff:(\d+\.\d+\.\d+\.\d+)$/i.exec(ip)
+  if (v4) ip = v4[1]
+  return ip === '::1' || (isIP(ip) === 4 && ip.startsWith('127.'))
+}
+
+/** `::ffff:1.2.3.4` and `1.2.3.4` are the same address. @param {string} ip */
+const plainIp = (ip) => ip.replace(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/i, '$1').toLowerCase()
+
 /**
- * The visitor's IP: the first X-Forwarded-For hop when the socket peer is loopback or private (Pano's proxy),
- * else the peer itself. adapter-node's `getClientAddress()` returns Pano's loopback peer unless `ADDRESS_HEADER`
- * is set, and Pano does not set it. A direct visitor cannot choose their IP through the header.
+ * The proxies whose X-Forwarded-For is believed: `TRUSTED_PROXIES` (comma separated IPs, plus the words `loopback`
+ * and `private`). Unset, it is `loopback` when Pano runs the site as a custom app (PANO_API_URL is set; Pano's proxy
+ * connects from loopback and sends a single X-Forwarded-For value), else nothing.
+ */
+function trustedProxies() {
+  const raw = env.TRUSTED_PROXIES ?? (env.PANO_API_URL ? 'loopback' : '')
+  return raw
+    .split(',')
+    .map((entry) => entry.trim().toLowerCase())
+    .filter(Boolean)
+}
+
+/** @param {string} ip @param {string[]} trusted */
+function isTrusted(ip, trusted) {
+  if (trusted.includes('loopback') && isLoopback(ip)) return true
+  if (trusted.includes('private') && isPrivateAddress(ip)) return true
+  return trusted.includes(plainIp(ip))
+}
+
+/**
+ * The visitor's IP. X-Forwarded-For is read only when the socket peer is a trusted proxy (see trustedProxies), and
+ * then from the right: the first hop that is not a trusted proxy is the visitor, the same rule as Pano's own
+ * resolver. A hop the visitor wrote themselves sits further left and is never reached. Otherwise the peer itself.
+ * adapter-node's `getClientAddress()` returns the proxy's peer unless `ADDRESS_HEADER` is set.
  * @param {Pick<import('@sveltejs/kit').RequestEvent, 'request' | 'getClientAddress'>} event
  * @returns {string|undefined}
  */
@@ -66,14 +97,22 @@ export function clientIpOf(event) {
   } catch {
     peer = undefined
   }
+  if (!peer) return undefined
 
-  if (peer && !isPrivateAddress(peer)) return peer
+  const trusted = trustedProxies()
+  if (!isTrusted(peer, trusted)) return peer
 
-  const forwarded = event.request.headers.get('x-forwarded-for')
-  const hop = forwarded?.split(',')[0]?.trim()
-  if (hop && isIP(hop)) return hop
+  const hops = (event.request.headers.get('x-forwarded-for') ?? '')
+    .split(',')
+    .map((hop) => hop.trim())
+    .filter(Boolean)
 
-  return peer || undefined
+  for (let i = hops.length - 1; i >= 0; i--) {
+    if (!isIP(hops[i])) return peer
+    if (!isTrusted(hops[i], trusted)) return hops[i]
+  }
+
+  return hops[0] ?? peer
 }
 
 /**

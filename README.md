@@ -26,13 +26,14 @@ Create the front-end key in Pano (in the panel: "Site connection key"): Panel ->
 
 ## .env keys
 
-| Key                 | Meaning                                                                                                                                       |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `API_URL`           | Where Pano answers; a trailing `/api` or `/api/v1` is optional. `PANO_API_URL` wins when both are set                                         |
-| `PANO_FRONTEND_KEY` | Panel -> Appearance -> Themes -> gear button ("Site display settings") -> "Site connection keys" -> Manage. Without it only public pages work |
-| `PANO_SITE_URL`     | Public address of this site (decides the cookie `Secure` flag and the allowed form origin)                                                    |
-| `ORIGIN`            | the public origin, needed when the site sits behind a proxy (`index.js` applies it; adapter-node 6 no longer reads it)                        |
-| `PORT`, `HOST`      | adapter-node listen address (Pano sets them in custom-app mode)                                                                               |
+| Key                 | Meaning                                                                                                                                                                                |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `API_URL`           | Where Pano answers; a trailing `/api` or `/api/v1` is optional. `PANO_API_URL` wins when both are set                                                                                  |
+| `PANO_FRONTEND_KEY` | Panel -> Appearance -> Themes -> gear button ("Site display settings") -> "Site connection keys" -> Manage. Without it only public pages work                                          |
+| `PANO_SITE_URL`     | Public address of this site (decides the cookie `Secure` flag and the allowed form origin)                                                                                             |
+| `ORIGIN`            | the public origin, needed when the site sits behind a proxy (`index.js` applies it; adapter-node 6 no longer reads it)                                                                 |
+| `TRUSTED_PROXIES`   | Proxies whose `X-Forwarded-For` gives the visitor's IP: IPs and the words `loopback` / `private`, comma separated (read from the right). Unset: `loopback` for a custom app, else none |
+| `PORT`, `HOST`      | adapter-node listen address (Pano sets them in custom-app mode)                                                                                                                        |
 
 Calls from the server to Pano use the global `fetch`, never SvelteKit's `event.fetch`, so a site served on Pano's own origin does not call itself. The `/pano` proxy passes a redirect of Pano (for example an avatar on its image host) on to the browser for `GET` and `HEAD`.
 

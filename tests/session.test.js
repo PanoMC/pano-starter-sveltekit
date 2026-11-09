@@ -35,6 +35,8 @@ beforeEach(() => {
   resetPluginsCache()
   process.env.API_URL = `${stub.url}/api`
   delete process.env.PANO_API_URL
+  // the tests stand behind Pano's proxy on loopback, like a custom app
+  process.env.TRUSTED_PROXIES = 'loopback'
   delete process.env.PANO_FRONTEND_KEY
   delete process.env.PANO_SITE_URL
 })
@@ -153,7 +155,7 @@ describe('with a front-end key', () => {
 
   test('two visitors behind Pano keep two client IPs', async () => {
     const a = await signIn({ headers: { 'x-forwarded-for': '203.0.113.9' } })
-    const b = await signIn({ headers: { 'x-forwarded-for': '198.51.100.7, 10.0.0.1' } })
+    const b = await signIn({ headers: { 'x-forwarded-for': '198.51.100.7' } })
 
     expect(a.form.cookies.sets[SESSION_COOKIE].value).toBe('tok-203.0.113.9')
     expect(b.form.cookies.sets[SESSION_COOKIE].value).toBe('tok-198.51.100.7')
@@ -345,12 +347,31 @@ describe('clientIpOf', () => {
     getClientAddress: () => peer
   })
 
-  test('believes the first hop only behind a loopback or private peer', () => {
-    expect(clientIpOf(event('127.0.0.1', '203.0.113.9, 10.0.0.2'))).toBe('203.0.113.9')
-    expect(clientIpOf(event('::1', '203.0.113.9'))).toBe('203.0.113.9')
-    expect(clientIpOf(event('::ffff:10.1.2.3', '2001:db8::5'))).toBe('2001:db8::5')
-    expect(clientIpOf(event('192.168.1.5', '203.0.113.9'))).toBe('203.0.113.9')
-    expect(clientIpOf(event('172.20.0.2', '203.0.113.9'))).toBe('203.0.113.9')
+  test('reads X-Forwarded-For from the right, behind a trusted peer only', () => {
+    process.env.TRUSTED_PROXIES = 'loopback'
+    expect(clientIpOf(event('127.0.0.1', '203.0.113.9'))).toBe('203.0.113.9')
+    expect(clientIpOf(event('::1', '2001:db8::5'))).toBe('2001:db8::5')
+    // a proxy that appends: the leftmost value is what the visitor sent, the rightmost is what the proxy saw
+    expect(clientIpOf(event('127.0.0.1', '6.6.6.6, 203.0.113.9'))).toBe('203.0.113.9')
+
+    process.env.TRUSTED_PROXIES = 'loopback, private'
+    expect(clientIpOf(event('::ffff:10.1.2.3', '6.6.6.6, 198.51.100.7, 10.0.0.2'))).toBe('198.51.100.7')
+
+    process.env.TRUSTED_PROXIES = '172.17.0.1'
+    expect(clientIpOf(event('172.17.0.1', '6.6.6.6, 203.0.113.9'))).toBe('203.0.113.9')
+    expect(clientIpOf(event('172.17.0.2', '203.0.113.9'))).toBe('172.17.0.2')
+  })
+
+  test('without TRUSTED_PROXIES the header is ignored, unless Pano runs the site as a custom app', () => {
+    delete process.env.TRUSTED_PROXIES
+    // standalone in Docker: the bridge gateway is the peer, the header is the visitor's own
+    expect(clientIpOf(event('172.17.0.1', '1.2.3.4'))).toBe('172.17.0.1')
+    expect(clientIpOf(event('127.0.0.1', '1.2.3.4'))).toBe('127.0.0.1')
+
+    process.env.PANO_API_URL = 'http://127.0.0.1:8088/api'
+    expect(clientIpOf(event('127.0.0.1', '203.0.113.9'))).toBe('203.0.113.9')
+    delete process.env.PANO_API_URL
+    process.env.TRUSTED_PROXIES = 'loopback'
   })
 
   test('a direct visitor cannot choose their IP', () => {
