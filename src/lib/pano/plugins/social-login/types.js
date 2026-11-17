@@ -19,7 +19,7 @@
 
 /** @typedef {{ items: string[] }} GetSocialLoginConfigPublicResponse */
 
-/** @typedef {{ redirectUrl: string }} SocialAuthInitResponse */
+/** @typedef {{ bindingSecret?: string, redirectUrl: string }} SocialAuthInitResponse */
 
 /** @typedef {Blob} SocialCallbackResponse */
 
@@ -32,12 +32,13 @@
  * @property {string} usernameOrEmail
  */
 
-/** @typedef {{ redirectUrl: string }} SocialLinkInitResponse */
+/** @typedef {{ bindingSecret?: string, redirectUrl: string }} SocialLinkInitResponse */
 
 /** @typedef {{ action: 'login' | 'link' | 'complete-required' | 'account-exists' | 'register', csrfToken?: string, email?: string, expiresAt?: number, pendingToken?: string, provider: string, sessionToken?: string, suggestedUsername?: string }} SocialProcessResponse */
 
 /**
  * @typedef {Object} SocialProcessRequest
+ * @property {string} [bindingSecret]
  * @property {string} code
  * @property {string} provider
  * @property {string} state

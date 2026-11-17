@@ -86,7 +86,7 @@
   "social-login": {
     "pluginId": "pano-plugin-social-login",
     "version": "0.0.0",
-    "operationsHash": "8c3d15c85bc685c0",
+    "operationsHash": "b52bd13ed8d9fa9b",
     "controllersHash": null
   },
   "staff-page": {

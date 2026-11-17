@@ -502,6 +502,9 @@
             "application/json": {
               "schema": {
                 "properties": {
+                  "bindingSecret": {
+                    "type": "string"
+                  },
                   "code": {
                     "type": "string"
                   },
@@ -680,6 +683,9 @@
               "application/json": {
                 "schema": {
                   "properties": {
+                    "bindingSecret": {
+                      "type": "string"
+                    },
                     "redirectUrl": {
                       "type": "string"
                     }
@@ -813,6 +819,9 @@
               "application/json": {
                 "schema": {
                   "properties": {
+                    "bindingSecret": {
+                      "type": "string"
+                    },
                     "redirectUrl": {
                       "type": "string"
                     }
