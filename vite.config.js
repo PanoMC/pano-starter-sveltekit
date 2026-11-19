@@ -4,6 +4,7 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
+  server: { watch: { ignored: ['**/build/**', '**/dist/**', '**/src-tauri/**', '**/target/**'] } },
   // SvelteKit 3 takes its options here; there is no svelte.config.js
   plugins: [sveltekit({ adapter: adapter(), preprocess: vitePreprocess() })],
   // the package zip ships no node_modules, so the client and the post sanitizer are bundled into the server build
